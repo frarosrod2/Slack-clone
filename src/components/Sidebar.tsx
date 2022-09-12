@@ -11,8 +11,26 @@ import AppsIcon from '@mui/icons-material/Apps';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import AddIcon from '@mui/icons-material/Add';
+import { useEffect, useState } from 'react';
+import { collection, DocumentData, getDocs } from 'firebase/firestore/lite';
+import { db } from '../firebase';
 
 export const Sidebar = () => {
+  const [channels, setChannels] = useState([] as DocumentData[]);
+
+  useEffect(() => {
+    getChannels();
+  }, []);
+
+  const getChannels = async () => {
+    const auxChannels: DocumentData[] = [];
+    const querySnapshot = await getDocs(collection(db, 'channels'));
+    querySnapshot.forEach((doc) => {
+      auxChannels.push({ id: doc.id, ...doc.data() });
+    });
+    setChannels([...auxChannels]);
+  };
+
   return (
     <SidebarContainer>
       <SidebarHeader>
@@ -36,6 +54,10 @@ export const Sidebar = () => {
       <SidebarOption Icon={ExpandLessIcon} title="Show less" />
       <hr />
       <SidebarOption Icon={AddIcon} title="Add channel" addChannelOption />
+
+      {channels.map((doc, id) => (
+        <SidebarOption key={doc.id} id={doc.id} title={doc.name} />
+      ))}
     </SidebarContainer>
   );
 };
