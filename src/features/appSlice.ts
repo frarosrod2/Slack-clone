@@ -1,27 +1,27 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, AppThunk } from '../app/store';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppPayload } from '../interfaces/reducers.interface';
+import { RootState } from '../app/store';
 
 export interface AppState {
-  roomId: string | null;
+  channelId: string;
 }
 
 const initialState: AppState = {
-  roomId: null,
+  channelId: '',
 };
 
 export const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    enterRoom: (state, action: PayloadAction<AppPayload>) => {
-      state.roomId = action.payload.roomId;
+    enterChannel: (state, action: PayloadAction<AppPayload>) => {
+      state.channelId = action.payload.channelId;
     },
   },
 });
 
-export const { enterRoom } = appSlice.actions;
+export const { enterChannel } = appSlice.actions;
 
-export const selectRoomId = (state: AppState) => state.roomId;
+export const selectChannelId = (state: RootState) => state.app.channelId;
 
 export default appSlice.reducer;

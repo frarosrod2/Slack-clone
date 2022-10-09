@@ -1,3 +1,3 @@
 export interface AppPayload {
-  roomId: string;
+  channelId: string;
 }

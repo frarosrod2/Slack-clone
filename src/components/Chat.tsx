@@ -1,14 +1,45 @@
+import { useMemo, useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
+import { ChatInput } from './ChatInput';
+import { selectChannelId } from '../features/appSlice';
+import { db } from '../firebase';
+
+import { doc, getDoc } from 'firebase/firestore/lite';
 import StarOutlineOutlinedIcon from '@mui/icons-material/StarOutlineOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import styled from 'styled-components';
 
 export const Chat = () => {
+  const channelId = useSelector(selectChannelId);
+  const [channelContent, setChannelContent] = useState() as any;
+  const [channelMessages, setChannelMessages] = useState([]) as any[];
+
+  useEffect(() => {
+    if (channelId) {
+      fetchChannelData();
+      fetchChannelMessages();
+    }
+  }, [channelId]);
+
+  const fetchChannelData = async () => {
+    const channelDetailsRef = doc(db, 'channels', channelId);
+    const docSnap = await getDoc(channelDetailsRef);
+    if (docSnap.exists()) {
+      console.log('docSnap', docSnap.data());
+      setChannelContent(docSnap.data());
+    }
+  };
+  const fetchChannelMessages = async () => {
+    // collection(db, 'messages')
+  };
+
   return (
     <ChatContainer>
       <Header>
         <HeaderLeft>
           <h4>
-            <strong>#Room-name</strong>
+            <strong>#Channel-name</strong>
           </h4>
           <StarOutlineOutlinedIcon />
         </HeaderLeft>
@@ -19,6 +50,8 @@ export const Chat = () => {
           </p>
         </HeaderRight>
       </Header>
+      <ChatMessages></ChatMessages>
+      <ChatInput channelName="Test" channelId={channelId} />
     </ChatContainer>
   );
 };
@@ -29,6 +62,8 @@ const ChatContainer = styled.div`
   overflow-y: auto;
   margin-top: 40px;
 `;
+
+const ChatMessages = styled.div``;
 
 const Header = styled.div`
   display: flex;

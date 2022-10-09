@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { db } from '../firebase';
 import { SidebarOptionProps } from '../interfaces/sidebar.interfaces';
 import { AppDispatch } from '../app/store';
-import { enterRoom } from '../features/appSlice';
+import { enterChannel } from '../features/appSlice';
 
 export const SidebarOption = ({
   Icon,
@@ -27,8 +27,8 @@ export const SidebarOption = ({
   const selectChannel = () => {
     if (id) {
       dispatch(
-        enterRoom({
-          roomId: id,
+        enterChannel({
+          channelId: id,
         })
       );
     }
